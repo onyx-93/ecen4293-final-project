@@ -1,0 +1,23 @@
+{
+  "baseMVA": 100,
+  "_comment": "type 1 = PQ bus (load), type 2 = PV bus (generator), type 3 = Slack bus (reference)",
+  "description": "5-Bus System",
+  "bus": [
+    { "bus_i": 1, "type": 3, "Pd": 0.0, "Qd": 0.0, "Gs": 0, "Bs": 0, "Vm": 1.0, "Va": 0.0 },
+    { "bus_i": 2, "type": 1, "Pd": 800, "Qd": 280, "Gs": 0, "Bs": 0, "Vm": 1.0, "Va": 0.0 },
+    { "bus_i": 3, "type": 2, "Pd": 80, "Qd": 40, "Gs": 0, "Bs": 0, "Vm": 1.05, "Va": 0.0 },
+    { "bus_i": 4, "type": 1, "Pd": 0.0, "Qd": 0.0, "Gs": 0, "Bs": 0, "Vm": 1.0, "Va": 0.0 },
+    { "bus_i": 5, "type": 1, "Pd": 0.0, "Qd": 0.0, "Gs": 0, "Bs": 0, "Vm": 1.0, "Va": 0.0 }
+  ],
+  "gen": [
+    { "bus": 1, "Pg": 0.0, "Qg": 0.0, "Qmax": 0.0, "Qmin": 0.0, "Vg": 1.0 },
+    { "bus": 3, "Pg": 520, "Qg": 0.0, "Qmax": 400, "Qmin": -280, "Vg": 1.05 }
+  ],
+  "branch": [
+    { "fbus": 2, "tbus": 4, "r": 0.0009, "x": 0.1, "b": 1.72 },
+    { "fbus": 2, "tbus": 5, "r": 0.0045, "x": 0.05, "b": 0.88 },
+    { "fbus": 4, "tbus": 5, "r": 0.00225, "x": 0.025, "b": 0.44 },
+    { "fbus": 1, "tbus": 5, "r": 0.0015, "x": 0.02, "b": 0.0 },
+    { "fbus": 3, "tbus": 4, "r": 0.00075, "x": 0.01, "b": 0.0 }
+  ]
+}
