@@ -1,6 +1,6 @@
 # Power Flow Solver
 
-A Python implementation of the **Newton-Raphson method** for solving power flow analysis on a multi-bus system. Developed as a final project for **ECEN4293 - Python with Numerical Methods** at Oklahoma State University.
+A Python implementation of the **Newton-Raphson** method for solving power flow analysis on a multi-bus system. Developed as a final project for **ECEN4293 - Python with Numerical Methods** at Oklahoma State University.
 
 ---
 
