@@ -6,7 +6,7 @@ A Python implementation of the **Newton-Raphson** method for solving power flow 
 
 ## 📋 Project Overview
 
-This project implements a robust **Newton-Raphson power flow solver** using **JAX** for automatic Jacobian computation via automatic differentiation. The solver analyzes steady-state operating conditions of the power system, calculating:
+This project implements a robust Newton-Raphson power flow solver using **JAX** for automatic Jacobian computation via automatic differentiation. The solver analyzes steady-state operating conditions of the power system, calculating:
 
 - Bus voltage magnitudes (Vm) and phase angles (Va)
 - Real and reactive power injections
@@ -15,8 +15,8 @@ This project implements a robust **Newton-Raphson power flow solver** using **JA
 
 ### Key Features
 
-- **Modern implementation** using JAX + NumPy for fast and accurate Jacobian calculation
-- **Automatic differentiation** (no manual Jacobian coding required)
+- Modern implementation using JAX + NumPy for fast and accurate Jacobian calculation
+- Automatic differentiation (no manual Jacobian coding required)
 - Support for Slack (PV), PV, and PQ buses
 - Modular design with clear separation of concerns
 - JSON-based input for easy data modification
@@ -25,9 +25,8 @@ This project implements a robust **Newton-Raphson power flow solver** using **JA
 
 ---
 
-## 🛠️ Technologies Used
+## 🛠️ Libraries Used
 
-- **Python 3**
 - **JAX** (with 64-bit precision enabled)
 - **NumPy**
 - **JSON** for data input
