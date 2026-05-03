@@ -50,15 +50,16 @@ def print_power_flow_results(results, bus_data):
 
     print(f"\nSlack Bus:")
     print(f"Bus {next(b['bus_i'] for b in bus_data if b.get('type') == 3)}: "
-          f"P = {results['slackP_MW']:.3f} MW, Q = {results['slackQ_MVAr']:.3f} MVAr")
+          f"P = {results['slackP_pu']:.3f} per unit ({results['slackP_pu'] * baseMVA:.3f} MW), "
+          f"Q = {results['slackQ_pu']:.3f} per unit ({results['slackQ_pu'] * baseMVA:.3f} MVAr)")
 
-    print(f"\nTotal loss = {results['Ploss_total_MW']:.3f} MW")
+    print(f"\nTotal loss = {results['Ploss_total_pu']:.3f} per unit ({results['Ploss_total_pu'] * baseMVA:.3f} MW)")
 
-    print("\nBranch Power Flows:")
-    print("      From      To      Pij       Qij       Pji       Qji      Ploss(MW)")
+    print("\nBranch Power Flows (per unit):")
+    print("      From      To        Pij           Qij             Pji           Qji           Ploss")
     for row in results['branch_flow']:
-        print(f"{int(row[0]):8d} {int(row[1]):8d}    {row[2]:9.4f} {row[3]:9.4f} "
-              f"{row[4]:9.4f} {row[5]:9.4f} {row[6]:9.4f}")
+        print(f"{int(row[0]):8d} {int(row[1]):8d}      {row[2]:9.4f}     {row[3]:9.4f} "
+              f"      {row[4]:9.4f}     {row[5]:9.4f}     {row[6]:9.4f}")
 
     print("=" * 75)
 

@@ -141,8 +141,8 @@ def newton_raphson(bus_data, branch_data, baseMVA, max_iter, tol, damping):
 
     # Slack bus power
     slack_idx = next(i for i, bus in enumerate(bus_data) if bus.get('type', 1) == 3)
-    slackP_MW = P_inj[slack_idx]
-    slackQ_MVAr = Q_inj[slack_idx]
+    slackP_pu = P_inj[slack_idx] / baseMVA
+    slackQ_pu = Q_inj[slack_idx] / baseMVA
 
     # Branch power flows and losses
     branch_flow = []
@@ -166,15 +166,15 @@ def newton_raphson(bus_data, branch_data, baseMVA, max_iter, tol, damping):
         Sij = Vf * np.conj(Iij)
         Sji = Vt * np.conj(Iji)
 
-        Pij = np.real(Sij) * baseMVA
-        Qij = np.imag(Sij) * baseMVA
-        Pji = np.real(Sji) * baseMVA
-        Qji = np.imag(Sji) * baseMVA
+        Pij = np.real(Sij) 
+        Qij = np.imag(Sij)
+        Pji = np.real(Sji)
+        Qji = np.imag(Sji)
         Ploss = Pij + Pji
 
         branch_flow.append([branch['fbus'], branch['tbus'], Pij, Qij, Pji, Qji, Ploss])
 
-    Ploss_total_MW = sum(row[6] for row in branch_flow)
+    Ploss_total_pu = sum(row[6] for row in branch_flow)
 
     return {
         'Vm': final_vm,
@@ -184,8 +184,8 @@ def newton_raphson(bus_data, branch_data, baseMVA, max_iter, tol, damping):
         'max_mismatch': max_mismatch_val,
         'P_inj_MW': P_inj,
         'Q_inj_MVAr': Q_inj,
-        'slackP_MW': slackP_MW,
-        'slackQ_MVAr': slackQ_MVAr,
-        'Ploss_total_MW': Ploss_total_MW,
+        'slackP_pu': slackP_pu,
+        'slackQ_pu': slackQ_pu,
+        'Ploss_total_pu': Ploss_total_pu,
         'branch_flow': branch_flow   # list of [from, to, Pij, Qij, Pji, Qji, Ploss]
     }
