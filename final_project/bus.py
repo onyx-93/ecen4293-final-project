@@ -1,4 +1,6 @@
 import json
+import os
+import sys
 import argparse
 from pf_solver import newton_raphson
 
@@ -8,8 +10,34 @@ def load_system_data(json_file):
     Load power system data from JSON and merge generators into bus_data
     so the solver only needs bus_data + branch_data.
     """
+    # --- Input validation ---
+    if not json_file.endswith('.json'):
+        print(f"\nError: '{json_file}' does not appear to be a JSON file.")
+        print("Please provide a valid .json preset file.")
+        sys.exit(1)
+
+    if not os.path.isfile(json_file):
+        print(f"\nError: File not found: '{json_file}'")
+        print("Please check the path and filename for typos.")
+        # Show available .json files in the same directory as a hint
+        directory = os.path.dirname(json_file) or '.'
+        if os.path.isdir(directory):
+            available = [f for f in os.listdir(directory) if f.endswith('.json')]
+            if available:
+                print(f"\nAvailable JSON files in '{directory}':")
+                for f in sorted(available):
+                    print(f"  {f}")
+            else:
+                print(f"\nNo JSON files found in '{directory}'.")
+        sys.exit(1)
+
     with open(json_file, 'r') as f:
-        data = json.load(f)
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError as e:
+            print(f"\nError: Could not parse '{json_file}' as valid JSON.")
+            print(f"Details: {e}")
+            sys.exit(1)
 
     bus_data = data.get('bus', [])
     branch_data = data.get('branch', [])
@@ -35,7 +63,6 @@ def load_system_data(json_file):
 
 def print_power_flow_results(results, bus_data):
     """Print results in a clear and organized manner."""
-    baseKV = 345  # Base voltage for converting per unit to actual values
     print(f"Iterations used: {results['iterations']}")
     print(' ')
     print("=" * 60)
@@ -50,16 +77,15 @@ def print_power_flow_results(results, bus_data):
 
     print(f"\nSlack Bus:")
     print(f"Bus {next(b['bus_i'] for b in bus_data if b.get('type') == 3)}: "
-          f"P = {results['slackP_pu']:.3f} per unit ({results['slackP_pu'] * baseMVA:.3f} MW), "
-          f"Q = {results['slackQ_pu']:.3f} per unit ({results['slackQ_pu'] * baseMVA:.3f} MVAr)")
+          f"P = {results['slackP_MW']:.3f} MW, Q = {results['slackQ_MVAr']:.3f} MVAr")
 
-    print(f"\nTotal loss = {results['Ploss_total_pu']:.3f} per unit ({results['Ploss_total_pu'] * baseMVA:.3f} MW)")
+    print(f"\nTotal loss = {results['Ploss_total_MW']:.3f} MW")
 
-    print("\nBranch Power Flows (per unit):")
-    print("      From      To        Pij           Qij             Pji           Qji           Ploss")
+    print("\nBranch Power Flows:")
+    print("      From      To      Pij       Qij       Pji       Qji      Ploss(MW)")
     for row in results['branch_flow']:
-        print(f"{int(row[0]):8d} {int(row[1]):8d}      {row[2]:9.4f}     {row[3]:9.4f} "
-              f"      {row[4]:9.4f}     {row[5]:9.4f}     {row[6]:9.4f}")
+        print(f"{int(row[0]):8d} {int(row[1]):8d}    {row[2]:9.4f} {row[3]:9.4f} "
+              f"{row[4]:9.4f} {row[5]:9.4f} {row[6]:9.4f}")
 
     print("=" * 75)
 
@@ -71,6 +97,11 @@ if __name__ == "__main__":
     parser.add_argument("--preset", "-p", type=str, default=None,
                         help="Path to JSON preset file")
     args = parser.parse_args()
+
+    if args.preset is None:
+        print("\nError: No preset file specified.")
+        print("Usage: python bus.py --preset <path/to/system.json>")
+        sys.exit(1)
 
     bus_data, branch_data, baseMVA = load_system_data(args.preset)
 
